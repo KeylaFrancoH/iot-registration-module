@@ -1,0 +1,48 @@
+import express, { Request, Response, NextFunction } from "express";
+import routes from "./routes/routes";
+import serverSocket from "./websocket";
+
+import swaggerUi from "swagger-ui-express";
+import { index } from "./swagger-docs/api-docs";
+
+var options = {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "HayStack API",
+  customfavIcon: "/assets/favicon.png",
+  defaultModelsExpandDepth: -1
+};
+
+
+
+const app = express();
+require("dotenv").config();
+
+//app.use("/v1/docs", swaggerUi.serve);
+//app.get("/v1/docs", swaggerUi.setup(index));
+app.use('/v1/docs', swaggerUi.serve, swaggerUi.setup(index, options));
+
+// errors
+app.use(function (err: any, req: Request, res: Response, next: any) {
+  res.status(err.status).send({ error: err.body });
+});
+
+// settings
+app.set("port", process.env.PORT || 8082);
+// app.set("portSocket", process.env.PORT_SOCKET || 8083);
+
+// middlewares
+app.use(express.urlencoded({ extended: false }));
+
+// routes
+app.use(express.json());
+app.use("/", routes);
+
+//socket
+serverSocket.listen(app.get("portSocket"), () => {
+  console.log(`Socket Server on port ${app.get("portSocket")}`);
+});
+
+// starting the server
+app.listen(app.get("port"), () => {
+  console.log(`Api Server on port ${app.get("port")}`);
+});
