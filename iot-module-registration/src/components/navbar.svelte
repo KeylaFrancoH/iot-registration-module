@@ -1,80 +1,272 @@
 <script lang="ts">
 </script>
 
-<nav
-	class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600"
->
-	<div class="container flex flex-wrap justify-between items-center mx-auto">
+<nav class="navbar">
+	<div class="navbar-container container">
+		<input type="checkbox" name="" id="" />
+		<div class="hamburger-lines">
+			<span class="line line1" />
+			<span class="line line2" />
+			<span class="line line3" />
+		</div>
+		<ul class="menu-items">
+			<li><a href="/">Dashboard Demo</a></li>
+			<li><a href="/registrar-modulo">Registrar Entidad</a></li>
+			<li><a href="/endpoints">Endpoint datos abiertos</a></li>
+		</ul>
 		<a href="https://www.espol.edu.ec/" class=" items-center">
 			<img
 				src="https://www.espol.edu.ec/sites/default/files/d9/logoESPOL.svg"
-				class="mr-3 h-6 sm:h-9"
+				class="imagen"
 				alt="Espol Logo"
 			/>
-			<span class="self-center text-xl font-bold whitespace-nowrap dark:text-white"
-				>Sistema de Registro de Módulos IoT</span
-			>
+			<span class="logo">Sistema de Registro de Módulos IoT</span>
 		</a>
-		<div class="flex md:order-2 items-end">
-			<!-- <button
-				type="button"
-				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-				>Get started</button
-			> -->
-			<button
-				data-collapse-toggle="navbar-sticky"
-				type="button"
-				class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-				aria-controls="navbar-sticky"
-				aria-expanded="false"
-			>
-				<span class="sr-only">Open main menu</span>
-				<svg
-					class="w-6 h-6"
-					aria-hidden="true"
-					fill="currentColor"
-					viewBox="0 0 20 20"
-					xmlns="http://www.w3.org/2000/svg"
-					><path
-						fill-rule="evenodd"
-						d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-						clip-rule="evenodd"
-					/></svg
-				>
-			</button>
-		</div>
-		<div
-			class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1"
-			id="navbar-sticky"
-		>
-			<ul
-				class="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
-			>
-				<li>
-					<a
-						href="/"
-						class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-						>Dashboard Demo</a
-					>
-				</li>
-				<li>
-					<a
-						href="/registrar-modulo"
-						class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-						>Registrar Entidad</a
-					>
-				</li>
-				<li>
-					<a
-						href="/endpoints"
-						class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-						>Endpoint datos abiertos</a
-					>
-				</li>
-			</ul>
-		</div>
 	</div>
 </nav>
 
 <style>
+	*,
+	*::after,
+	*::before {
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+	}
+
+	.html {
+		font-size: 62.5%;
+	}
+
+	.navbar input[type='checkbox'],
+	.navbar .hamburger-lines {
+		display: none;
+	}
+
+	.container {
+		max-width: 1200px;
+		width: 90%;
+		margin: auto;
+	}
+
+	.navbar {
+		box-shadow: 0 3px 2px -2px #aaa;
+		position: fixed;
+		width: 100%;
+		background: white;
+		color: #000;
+		opacity: 0.85;
+		z-index: 100;
+		padding-bottom: 10px;
+		padding-top: 10px;
+		left: 0;
+		top: 0;
+	}
+
+	.navbar-container {
+		display: flex;
+		justify-content: space-between;
+		height: 64px;
+		align-items: center;
+	}
+
+	.menu-items {
+		order: 2;
+		display: flex;
+	}
+	.logo,
+	.imagen {
+		order: 1;
+	}
+
+	.menu-items li {
+		list-style: none;
+		margin-left: 1.5rem;
+		font-size: 1.3rem;
+	}
+
+	.navbar a {
+		color: #444;
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.3s ease-in-out;
+	}
+
+	.navbar a:hover {
+		color: #1976d2;
+	}
+
+	@media (max-width: 900px) {
+		.menu-items li {
+			font-size: 1rem;
+		}
+		.logo {
+			font-size: 0.9rem;
+		}
+	}
+	@media (max-width: 814px) {
+		.menu-items li {
+			font-size: 0.8rem;
+		}
+		.logo {
+			font-size: 0.7rem;
+		}
+	}
+	@media (max-width: 785px) {
+		.navbar {
+			opacity: 0.95;
+			padding-top: 30px;
+		}
+
+		.navbar-container input[type='checkbox'],
+		.navbar-container .hamburger-lines {
+			display: block;
+		}
+
+		.navbar-container {
+			display: block;
+			position: relative;
+			height: 64px;
+			margin: 0;
+		}
+
+		.navbar-container input[type='checkbox'] {
+			position: absolute;
+			display: block;
+			height: 32px;
+			width: 30px;
+			top: 20px;
+			left: 20px;
+			z-index: 5;
+			opacity: 0;
+			cursor: pointer;
+		}
+
+		.navbar-container .hamburger-lines {
+			display: block;
+			height: 20px;
+			width: 22px;
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			z-index: 2;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.navbar-container .hamburger-lines .line {
+			display: block;
+			height: 4px;
+			width: 100%;
+			border-radius: 10px;
+			background: #333;
+		}
+
+		.navbar-container .hamburger-lines .line1 {
+			transform-origin: 0% 0%;
+			transition: transform 0.3s ease-in-out;
+		}
+
+		.navbar-container .hamburger-lines .line2 {
+			transition: transform 0.2s ease-in-out;
+		}
+
+		.navbar-container .hamburger-lines .line3 {
+			transform-origin: 0% 100%;
+			transition: transform 0.3s ease-in-out;
+		}
+
+		.navbar .menu-items {
+			padding-top: 100px;
+			background: #fff;
+			height: 100vh;
+			max-width: 50%;
+			transform: translate(-150%);
+			display: flex;
+			flex-direction: column;
+			margin-left: -40px;
+			padding-left: 40px;
+			transition: transform 0.5s ease-in-out;
+			box-shadow: 2px 0 5px -2px #aaa;
+			overflow: scroll;
+		}
+
+		.navbar .menu-items li {
+			margin-bottom: 1.8rem;
+			font-size: 1.1rem;
+			font-weight: 500;
+		}
+
+		.logo {
+			position: absolute;
+			bottom: 4px;
+			left: 80px;
+		}
+
+		.imagen {
+			position: absolute;
+			top: 2px;
+			left: 80px;
+			height: 2.5rem;
+		}
+
+		.navbar-container input[type='checkbox']:checked ~ .menu-items {
+			transform: translateX(0);
+		}
+
+		.navbar-container input[type='checkbox']:checked ~ .hamburger-lines .line1 {
+			transform: rotate(45deg);
+		}
+
+		.navbar-container input[type='checkbox']:checked ~ .hamburger-lines .line2 {
+			transform: scaleY(0);
+		}
+
+		.navbar-container input[type='checkbox']:checked ~ .hamburger-lines .line3 {
+			transform: rotate(-45deg);
+		}
+	}
+
+	@media (max-width: 500px) {
+		.navbar-container input[type='checkbox']:checked ~ .logo {
+			display: none;
+		}
+	}
+
+	@media (max-width: 370px) {
+		.imagen {
+			top: 4px;
+			left: 80px;
+			height: 2rem;
+		}
+
+		.logo {
+			bottom: 8px;
+			left: 80px;
+			font-size: 0.8rem;
+		}
+		.navbar .menu-items {
+			max-width: 80%;
+		}
+		.navbar .menu-items li {
+			margin-bottom: 1.4rem;
+			font-size: 0.8rem;
+		}
+	}
+
+	@media (max-width: 310px) {
+		.imagen {
+			top: 1px;
+		}
+
+		.logo {
+			bottom: 1px;
+			font-size: 0.7rem;
+		}
+
+		.navbar .menu-items {
+			max-width: 90%;
+		}
+	}
 </style>

@@ -1,8 +1,8 @@
 
 import root from '__GENERATED__/root.svelte';
-import { respond } from '/home/keyla/iot-registration-module/.svelte-kit/runtime/server/index.js';
-import { set_paths, assets, base } from '/home/keyla/iot-registration-module/.svelte-kit/runtime/paths.js';
-import { set_prerendering } from '/home/keyla/iot-registration-module/.svelte-kit/runtime/env.js';
+import { respond } from '/home/keyla/iot-registration-module/iot-module-registration/.svelte-kit/runtime/server/index.js';
+import { set_paths, assets, base } from '/home/keyla/iot-registration-module/iot-module-registration/.svelte-kit/runtime/paths.js';
+import { set_prerendering } from '/home/keyla/iot-registration-module/iot-module-registration/.svelte-kit/runtime/env.js';
 
 const template = ({ head, body, assets, nonce }) => "<!DOCTYPE html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<link rel=\"icon\" href=\"" + assets + "/favicon.png\" />\n\t\t<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js\" integrity=\"sha512-v3ygConQmvH0QehvQa6gSvTE2VdBZ6wkLOlmK7Mcy2mZ0ZF9saNbbk19QeaoTHdWIEiTlWmrwAL4hS8ElnGFbA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div>" + body + "</div>\n\t</body>\n</html>\n";
 
