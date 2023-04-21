@@ -92,10 +92,13 @@
 				{/each}
 				{#each items as item}
 					{#if !item.tags.run}
-						<TimeseriesChart
+						<!--
+							<TimeseriesChart
 							pointId={item.value}
 							timeRefreshData={equip.id !== 'dd85475c-a5ef-4a15-b00f-206e408528b2' ? 10 : undefined}
 						/>
+					-->
+						<TimeseriesChart pointId={item.value}/>
 					{/if}
 				{/each}
 			{/if}
