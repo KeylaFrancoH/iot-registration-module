@@ -11,7 +11,8 @@
 
 	onMount(async () => {
 		const module = await import('../components/plots/timeseries-chart.svelte');
-		MyComponent = module.default;
+		//MyComponent = module.default;
+		MyComponent = module;
 	});
 
 	let items: any[] = [];

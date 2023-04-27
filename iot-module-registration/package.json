@@ -32,6 +32,8 @@
 		"@types/chart.js": "^2.9.37",
 		"@urql/core": "^2.4.4",
 		"chart.js": "^4.2.1",
+		"date-picker-svelte": "^2.3.0",
+		"flatpickr": "^4.6.13",
 		"fusioncharts": "^3.19.0",
 		"simple-svelte-autocomplete": "^2.2.3",
 		"socket.io": "^4.5.1",

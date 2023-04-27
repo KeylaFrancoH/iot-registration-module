@@ -1,16 +1,7 @@
 <script lang="ts">
-	// export const prerender = true;
-
-	import SvelteFC, { fcRoot } from 'svelte-fusioncharts';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
-
-	let myChart: Chart;
-	let chartData: any;
-	let data = [20, 100, 50, 12, 20, 130, 45];
-    let labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    let ctx;
-    let canvas:any;
+	import { DateInput } from 'date-picker-svelte';
 	export let pointId: string;
 	export let timeRefreshData: number = 45;
 	const apiStandardization = import.meta.env.VITE_API_STANDARDIZATION;
@@ -21,9 +12,11 @@
 	let subCaptionText = '';
 	let unit = '';
 
+	
 	//@ts-ignore
 	var myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
+
 
 	const raw = JSON.stringify({
 		pointsIds: [pointId],
@@ -66,20 +59,10 @@
 		return data;
 	};
 
-	let FusionCharts: any;
-	let Timeseries: any;
-	onMount(async () => {
-		// getSensorData();
-	//	Timeseries = await import('fusioncharts/fusioncharts.timeseries');
-		//FusionCharts = await import('fusioncharts');
-	//	fcRoot(FusionCharts.default, Timeseries.default);
-		grafica();
-	});
 
-	onDestroy(() => {
-		clearInterval(interval);
-		//console.log('DESTROY: ', pointId);
-	});
+	//@ts-ignore
+	var myHeaders = new Headers();
+	myHeaders.append('Content-Type', 'application/json');
 
 	const schema = [
 		{
@@ -92,135 +75,60 @@
 			type: 'number'
 		}
 	];
-	const grafica = () => {
-		schema[1].name = `Lecturas de ${captionText} (${unit})`;
 
-		
-/*
-		const ctx = document.getElementById('myChart') as HTMLCanvasElement;
-
-		myChart = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels: [1, 2.3],
-				datasets: [
-					{
-						label: 'Unit Sales',
-						data: [2,8,7]
-					}
-				]
+	console.log(getSensorData())
+	/**
+	 * @type {{ getContext: (arg0: string) => any; }}
+	 */
+	let portfolio: { getContext: (arg0: string) => any; };
+	const data = {
+		labels: ['Expenses', 'Savings', 'Investments'],
+		datasets: [
+			{
+				label: schema[1].name = `Lecturas de ${captionText} (${unit})`,
+				data: [300, 50, 100],
+				backgroundColor: ['#7000e1', '#fc8800', '#00b0e8'],
+				// hoverOffset: 4,
+				borderWidth: 0
 			}
-		});*/
-
-		ctx = canvas.getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Unit Sales',
-                        data: data
-                    }
-                ]
-            }
-        });
+		]
 	};
-
-
-	const getChartConfig = (data: any) => {
-		schema[1].name = `Lecturas de ${captionText} (${unit})`;
-
-		const fusionDataStore = new FusionCharts.DataStore();
-		const fusionTable = fusionDataStore.createDataTable(data, schema);
-
-		const chartConfig = {
-			type: 'timeseries',
-			width: '100%',
-			height: 600,
-			renderAt: 'chart-container',
-			dataSource: {
-				data: fusionTable,
-				caption: {
-					text: captionText
-				},
-				subcaption: {
-					text: subCaptionText
-				},
-				yAxis: [
-					{
-						plot: {
-							value: 'Valor Sensado',
-							type: 'line',
-							connectnulldata: true
-						},
-						format: {
-							sufix: '$'
-						},
-						title: `Lecturas de ${captionText}`
+	const config = {
+		type: 'line',
+		data: data,
+		options: {
+			borderRadius: '30',
+			responsive: true,
+			cutout: '95%',
+			spacing: 2,
+			plugins: {
+				legend: {
+					position: 'bottom',
+					display: true,
+					labels: {
+						usePointStyle: true,
+						padding: 20,
+						font: {
+							size: 14
+						}
 					}
-				]
+				},
+				title: {
+					display: true,
+					text: 'My Personal Portfolio'
+				}
 			}
-		};
-
-		return chartConfig;
-	};
-
-	let chartComponent: any;
-
-	let interval: any;
-
-	const updateData = async () => {
-		const updatedSensorData = await getSensorData();
-		//console.log('GET DATA: ', pointId);
-		if (!!chartComponent?.feedData) {
-			//console.log('UPDATE CHART: ', pointId);
-			chartComponent.feedData([...updatedSensorData]);
-		}
-
-		// setTimeout(updateData, timeRefreshData * 1000);
-	};
-
-	const renderCompleteHandler = async (event: any) => {
-		//console.log(!interval);
-
-		if (!interval) {
-			//console.log('INICIAR INTERVALO: ', pointId, 'tiempo: ', timeRefreshData);
-
-			interval = setInterval(async () => await updateData(), timeRefreshData * 1000);
 		}
 	};
+	onMount(() => {
+		const ctx = portfolio.getContext('2d');
+		// Initialize chart using default config set
+		// @ts-ignore
+		var myChart = new Chart(ctx, config);
+	});
+
+	let date = new Date();
 </script>
 
-<div id="chart-container" class="sm:max-w-screen">
-	
-		{#await getSensorData()}
-			<p>Obteniendo datos y esquema...</p>
-		{:then value}
-			{#if value.length > 0}
-				<!--
-				<SvelteFC
-					
-					{...getChartConfig(value)}
-					on:renderComplete={renderCompleteHandler}
-					bind:chart={chartComponent}
-
-					
-				/>
-			-->
-			<canvas bind:this={canvas} width={32} height={32} />
-			{:else}
-				<div class="w-full flex justify-center font-semibold m-10">SIN DATOS QUE MOSTRAR</div>
-			{/if}
-		{:catch error}
-			<p>Something went wrong: {error.message}</p>
-		{/await}
-	
-</div>
-<style>
-    canvas {
-        width: 100%;
-        height: 100%;
-        background-color: #666;
-    }
-</style>
+<DateInput bind:value={date} />
+<canvas bind:this={portfolio} width={400} height={400} />
