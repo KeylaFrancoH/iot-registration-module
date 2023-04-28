@@ -1464,18 +1464,102 @@ const DateInput = create_ssr_component(($$result, $$props, $$bindings, slots) =>
 const Timeseries_chart = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { pointId } = $$props;
   let { timeRefreshData = 45 } = $$props;
+  const apiStandardization = "http://172.24.178.122:8082/v1";
   let captionText = "";
+  let unit = "";
+  let captionE = [];
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  JSON.stringify({
+  const raw = JSON.stringify({
     pointsIds: [pointId],
     filtroPorEtiquetas: { etiquetas: [] },
     limite: 2e3
   });
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow"
+  };
+  const getSensorData = async () => {
+    try {
+      const res = await fetch(`${apiStandardization}/obtener-datos`, requestOptions);
+      const response = await res.json();
+      const formatedResponse = formatResponse(response);
+      return formatedResponse;
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+  const formatResponse = (response) => {
+    var _a, _b, _c, _d, _e, _f;
+    if (response.response.length === 0)
+      return [];
+    let data2 = [];
+    let caption = [];
+    captionText = ((_b = (_a = response == null ? void 0 : response.response) == null ? void 0 : _a[0].point) == null ? void 0 : _b.dis) ?? "";
+    ((_d = (_c = response == null ? void 0 : response.response) == null ? void 0 : _c[0].point) == null ? void 0 : _d.equip.dis) ?? "";
+    unit = ((_f = (_e = response == null ? void 0 : response.response) == null ? void 0 : _e[0].registro) == null ? void 0 : _f.unit) ?? "";
+    for (let rv of (response == null ? void 0 : response.response) ?? []) {
+      data2 = [...data2, [rv.timestamp_registro.split(".")[0], rv.registro.value]];
+      if (!caption.includes(rv.point.dis)) {
+        caption.push(rv.point.dis);
+      }
+    }
+    return [data2, caption];
+  };
+  const captionElement = () => {
+    getSensorData().then((a) => {
+      if (a.length > 0) {
+        captionText = a[1][0];
+        if (!captionE.includes(captionText)) {
+          captionE.push(captionText);
+        }
+      }
+    });
+  };
+  console.log(captionE);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  console.log(captionText);
+  getSensorData();
   let portfolio;
+  const data = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+      {
+        label: `Lecturas de ${captionElement()} (${unit})`,
+        data: [10, 20, 30, 40, 50, 60, 70],
+        backgroundColor: ["#7000e1", "#fc8800", "#00b0e8"],
+        borderWidth: 0
+      }
+    ]
+  };
+  ({
+    type: "line",
+    data,
+    options: {
+      borderRadius: "30",
+      responsive: true,
+      cutout: "95%",
+      spacing: 2,
+      plugins: {
+        legend: {
+          position: "left",
+          time: {
+            displayFormats: { day: "MM/YY" },
+            tooltipFormat: "DD/MM/YY",
+            unit: "month"
+          },
+          labels: {
+            usePointStyle: true,
+            padding: 20,
+            font: { size: 14 }
+          }
+        },
+        title: { display: true, text: captionElement() }
+      }
+    }
+  });
   let date = new Date();
   if ($$props.pointId === void 0 && $$bindings.pointId && pointId !== void 0)
     $$bindings.pointId(pointId);
@@ -1491,7 +1575,7 @@ const Timeseries_chart = create_ssr_component(($$result, $$props, $$bindings, sl
         $$settled = false;
       }
     }, {})}
-<canvas${add_attribute("width", 400, 0)}${add_attribute("height", 400, 0)}${add_attribute("this", portfolio, 0)}></canvas>`;
+<canvas${add_attribute("width", 400, 0)}${add_attribute("height", 200, 0)}${add_attribute("this", portfolio, 0)}></canvas>`;
   } while (!$$settled);
   return $$rendered;
 });

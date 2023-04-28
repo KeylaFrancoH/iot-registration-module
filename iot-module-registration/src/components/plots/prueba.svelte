@@ -7,7 +7,7 @@
    
 	import { DateInput } from 'date-picker-svelte'
 	let date = new Date()
-    
+
   
 
 
@@ -51,7 +51,6 @@
 			const res = await fetch(`${apiStandardization}/obtener-datos`, requestOptions);
 			const response = await res.json();
 			const formatedResponse = formatResponse(response);
-			console.log('timeseriesResponse', response);
 			return formatedResponse;
 		} catch (e: any) {
 			throw new Error(e);

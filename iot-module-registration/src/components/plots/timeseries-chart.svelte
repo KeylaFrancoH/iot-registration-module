@@ -11,12 +11,11 @@
 	let captionText = '';
 	let subCaptionText = '';
 	let unit = '';
+	let captionE : any = [];
 
-	
 	//@ts-ignore
 	var myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
-
 
 	const raw = JSON.stringify({
 		pointsIds: [pointId],
@@ -38,7 +37,6 @@
 			const res = await fetch(`${apiStandardization}/obtener-datos`, requestOptions);
 			const response = await res.json();
 			const formatedResponse = formatResponse(response);
-			console.log('timeseriesResponse', response);
 			return formatedResponse;
 		} catch (e: any) {
 			throw new Error(e);
@@ -48,6 +46,7 @@
 	const formatResponse = (response: any) => {
 		if (response.response.length === 0) return [];
 		let data: any = [];
+		let caption: any = [];
 
 		captionText = response?.response?.[0].point?.dis ?? '';
 		subCaptionText = response?.response?.[0].point?.equip.dis ?? '';
@@ -55,11 +54,29 @@
 
 		for (let rv of response?.response ?? []) {
 			data = [...data, [rv.timestamp_registro.split('.')[0], rv.registro.value]];
+			if (!caption.includes(rv.point.dis)) {
+				caption.push(rv.point.dis);
+			}
 		}
-		return data;
+
+		return [data, caption];
+	};
+	const captionElement = () => {
+		getSensorData().then((a) => {
+		if(a.length > 0){
+			captionText = a[1][0];
+			if (!captionE.includes(captionText)){
+				captionE.push(captionText);
+			}
+			
+		}
+		
+			
+		})
 	};
 
-
+	console.log(captionE)
+	
 	//@ts-ignore
 	var myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
@@ -71,22 +88,22 @@
 			format: '%Y-%m-%dT%H:%M:%S'
 		},
 		{
-			name: `Lectura de ${captionText}`,
+			name: `Lectura de ${captionE}`,
 			type: 'number'
 		}
 	];
-
-	console.log(getSensorData())
+	getSensorData();
 	/**
 	 * @type {{ getContext: (arg0: string) => any; }}
 	 */
-	let portfolio: { getContext: (arg0: string) => any; };
+	let portfolio: { getContext: (arg0: string) => any };
+
 	const data = {
-		labels: ['Expenses', 'Savings', 'Investments'],
+		labels:  ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 		datasets: [
 			{
-				label: schema[1].name = `Lecturas de ${captionText} (${unit})`,
-				data: [300, 50, 100],
+				label: (schema[1].name = `Lecturas de ${captionElement()} (${unit})`),
+				data:[10, 20, 30, 40, 50, 60, 70],
 				backgroundColor: ['#7000e1', '#fc8800', '#00b0e8'],
 				// hoverOffset: 4,
 				borderWidth: 0
@@ -103,8 +120,12 @@
 			spacing: 2,
 			plugins: {
 				legend: {
-					position: 'bottom',
-					display: true,
+					position: 'left',
+					time: {
+						displayFormats: { day: 'MM/YY' },
+						tooltipFormat: 'DD/MM/YY',
+						unit: 'month'
+					},
 					labels: {
 						usePointStyle: true,
 						padding: 20,
@@ -115,7 +136,7 @@
 				},
 				title: {
 					display: true,
-					text: 'My Personal Portfolio'
+					text: captionElement()
 				}
 			}
 		}
@@ -131,4 +152,4 @@
 </script>
 
 <DateInput bind:value={date} />
-<canvas bind:this={portfolio} width={400} height={400} />
+<canvas bind:this={portfolio} width={400} height={200} />
