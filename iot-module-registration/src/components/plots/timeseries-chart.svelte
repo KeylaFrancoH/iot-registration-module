@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import { DateInput } from 'date-picker-svelte';
+	import { onMount } from 'svelte';
 	export let pointId: string;
-	export let timeRefreshData: number = 45;
 	const apiStandardization = import.meta.env.VITE_API_STANDARDIZATION;
 
 	$: pointId;
@@ -11,7 +10,6 @@
 	let captionText = '';
 	let subCaptionText = '';
 	let unit = '';
-	let captionE : any = [];
 
 	//@ts-ignore
 	var myHeaders = new Headers();
@@ -63,20 +61,13 @@
 	};
 	const captionElement = () => {
 		getSensorData().then((a) => {
-		if(a.length > 0){
-			captionText = a[1][0];
-			if (!captionE.includes(captionText)){
-				captionE.push(captionText);
+			if (a.length > 0) {
+				captionText = a[1][0];
+				console.log(captionText);
 			}
-			
-		}
-		
-			
-		})
+		});
 	};
 
-	console.log(captionE)
-	
 	//@ts-ignore
 	var myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
@@ -88,68 +79,80 @@
 			format: '%Y-%m-%dT%H:%M:%S'
 		},
 		{
-			name: `Lectura de ${captionE}`,
+			name: `Lectura de ${captionText}`,
 			type: 'number'
 		}
 	];
-	getSensorData();
+	
+
 	/**
 	 * @type {{ getContext: (arg0: string) => any; }}
 	 */
-	let portfolio: { getContext: (arg0: string) => any };
+	let sensorGraphic: { getContext: (arg0: string) => any };
 
 	const data = {
-		labels:  ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'september'],
 		datasets: [
 			{
 				label: (schema[1].name = `Lecturas de ${captionElement()} (${unit})`),
-				data:[10, 20, 30, 40, 50, 60, 70],
+				data: [10, 20, 30, 40, 50, 60, 70, 20, 100],
 				backgroundColor: ['#7000e1', '#fc8800', '#00b0e8'],
 				// hoverOffset: 4,
 				borderWidth: 0
 			}
 		]
 	};
-	const config = {
-		type: 'line',
-		data: data,
-		options: {
-			borderRadius: '30',
-			responsive: true,
-			cutout: '95%',
-			spacing: 2,
-			plugins: {
-				legend: {
-					position: 'left',
-					time: {
-						displayFormats: { day: 'MM/YY' },
-						tooltipFormat: 'DD/MM/YY',
-						unit: 'month'
-					},
-					labels: {
-						usePointStyle: true,
-						padding: 20,
-						font: {
-							size: 14
+
+	const getChartConfig = () => {
+		schema[1].name = `Lecturas de ${captionText} (${unit})`;
+
+		const config = {
+			type: 'line',
+			data: data,
+			options: {
+				borderRadius: '30',
+				responsive: true,
+				cutout: '95%',
+				spacing: 2,
+				plugins: {
+					legend: {
+						position: 'left',
+						time: {
+							displayFormats: { day: 'MM/YY' },
+							tooltipFormat: 'DD/MM/YY',
+							unit: 'month'
+						},
+						labels: {
+							usePointStyle: true,
+							padding: 20,
+							font: {
+								size: 14
+							}
 						}
+					},
+					title: {
+						display: true,
+						text: captionElement()
 					}
-				},
-				title: {
-					display: true,
-					text: captionElement()
 				}
 			}
-		}
+		};
+
+		return config;
 	};
+
 	onMount(() => {
-		const ctx = portfolio.getContext('2d');
+		const ctx = sensorGraphic.getContext('2d');
 		// Initialize chart using default config set
 		// @ts-ignore
-		var myChart = new Chart(ctx, config);
+		var myChart = new Chart(ctx, getChartConfig());
 	});
 
 	let date = new Date();
 </script>
 
 <DateInput bind:value={date} />
-<canvas bind:this={portfolio} width={400} height={200} />
+
+<div id="chart-container" class="sm:max-w-screen">
+	<canvas bind:this={sensorGraphic} width={400} height={200} />
+</div>

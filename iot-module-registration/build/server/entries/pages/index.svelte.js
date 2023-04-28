@@ -1463,11 +1463,9 @@ const DateInput = create_ssr_component(($$result, $$props, $$bindings, slots) =>
 });
 const Timeseries_chart = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { pointId } = $$props;
-  let { timeRefreshData = 45 } = $$props;
   const apiStandardization = "http://172.24.178.122:8082/v1";
   let captionText = "";
   let unit = "";
-  let captionE = [];
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   const raw = JSON.stringify({
@@ -1495,76 +1493,55 @@ const Timeseries_chart = create_ssr_component(($$result, $$props, $$bindings, sl
     var _a, _b, _c, _d, _e, _f;
     if (response.response.length === 0)
       return [];
-    let data2 = [];
+    let data = [];
     let caption = [];
     captionText = ((_b = (_a = response == null ? void 0 : response.response) == null ? void 0 : _a[0].point) == null ? void 0 : _b.dis) ?? "";
     ((_d = (_c = response == null ? void 0 : response.response) == null ? void 0 : _c[0].point) == null ? void 0 : _d.equip.dis) ?? "";
     unit = ((_f = (_e = response == null ? void 0 : response.response) == null ? void 0 : _e[0].registro) == null ? void 0 : _f.unit) ?? "";
     for (let rv of (response == null ? void 0 : response.response) ?? []) {
-      data2 = [...data2, [rv.timestamp_registro.split(".")[0], rv.registro.value]];
+      data = [...data, [rv.timestamp_registro.split(".")[0], rv.registro.value]];
       if (!caption.includes(rv.point.dis)) {
         caption.push(rv.point.dis);
       }
     }
-    return [data2, caption];
+    return [data, caption];
   };
   const captionElement = () => {
     getSensorData().then((a) => {
       if (a.length > 0) {
         captionText = a[1][0];
-        if (!captionE.includes(captionText)) {
-          captionE.push(captionText);
-        }
+        console.log(captionText);
       }
     });
   };
-  console.log(captionE);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   getSensorData();
   let portfolio;
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+  ({
+    labels: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "september"
+    ],
     datasets: [
       {
         label: `Lecturas de ${captionElement()} (${unit})`,
-        data: [10, 20, 30, 40, 50, 60, 70],
+        data: [10, 20, 30, 40, 50, 60, 70, 20, 100],
         backgroundColor: ["#7000e1", "#fc8800", "#00b0e8"],
         borderWidth: 0
       }
     ]
-  };
-  ({
-    type: "line",
-    data,
-    options: {
-      borderRadius: "30",
-      responsive: true,
-      cutout: "95%",
-      spacing: 2,
-      plugins: {
-        legend: {
-          position: "left",
-          time: {
-            displayFormats: { day: "MM/YY" },
-            tooltipFormat: "DD/MM/YY",
-            unit: "month"
-          },
-          labels: {
-            usePointStyle: true,
-            padding: 20,
-            font: { size: 14 }
-          }
-        },
-        title: { display: true, text: captionElement() }
-      }
-    }
   });
   let date = new Date();
   if ($$props.pointId === void 0 && $$bindings.pointId && pointId !== void 0)
     $$bindings.pointId(pointId);
-  if ($$props.timeRefreshData === void 0 && $$bindings.timeRefreshData && timeRefreshData !== void 0)
-    $$bindings.timeRefreshData(timeRefreshData);
   let $$settled;
   let $$rendered;
   do {
@@ -1575,7 +1552,8 @@ const Timeseries_chart = create_ssr_component(($$result, $$props, $$bindings, sl
         $$settled = false;
       }
     }, {})}
-<canvas${add_attribute("width", 400, 0)}${add_attribute("height", 200, 0)}${add_attribute("this", portfolio, 0)}></canvas>`;
+
+<div id="chart-container" class="sm:max-w-screen"><canvas${add_attribute("width", 400, 0)}${add_attribute("height", 200, 0)}${add_attribute("this", portfolio, 0)}></canvas></div>`;
   } while (!$$settled);
   return $$rendered;
 });
